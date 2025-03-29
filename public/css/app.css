@@ -11,16 +11,4 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-body {
-    background-color: #181818;
-    color: white;
-}
-.navbar {
-    background-color: #1f1f1f;
-}
-.nav-link {
-    color: white !important;
-}
-.nav-link:hover {
-    color: #a8a8a8 !important;
-}
+

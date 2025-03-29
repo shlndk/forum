@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
@@ -20,4 +21,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/favorites', [FavoriteController::class, 'ShowFav'])->name('showFav');
     Route::delete('/favorites/remove/{postId}', [FavoriteController::class, 'removeFav'])->name('removeFav');
     Route::post('/create-post', [HomeController::class, 'createPost'])->name('createPost');
+    Route::post('/add-comment', [CommentsController::class, 'addComment'])->name('addComment');
+    Route::get('/comments/{post}', [CommentsController::class, 'showComment'])->name('showComment');
+    Route::delete('/delete-comment/{comment}', [CommentsController::class, 'deleteComment'])->name('deleteComment');
+    Route::post('delete-post/{post}', [CommentsController::class, 'destroyComment'])->name('destroyComment');
 });
