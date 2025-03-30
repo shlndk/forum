@@ -20,7 +20,7 @@ class CommentsController extends Controller
 
         Comment::create($comment);
 
-        return back()->with('success', 'Комментарий успешно добавлен.');
+        return back()->with('success', 'Comment has been successfully added');
     }
     public function showComment(Post $post, User $user)
     {
@@ -34,10 +34,16 @@ class CommentsController extends Controller
         $comment = Comment::findOrFail($commentId);
 
         if (auth()->id() !== $comment->user_id) {
-            return redirect()->back()->with('error', 'У вас нет прав для удаления этого комментария.');
+            return redirect()->back()->with('error', 'You do not have permissions to delete this comment');
         }
 
         $comment->delete();
-        return redirect()->back()->with('success', 'Комментарий успешно удалён.');
+        return redirect()->back()->with('success', 'Comment has been successfully deleted');
     }
+
+    public function getComments(){
+        $comments = auth()->user()->comments()->get();
+        return view('comments.show', compact('comments'));
+    }
+
 }
