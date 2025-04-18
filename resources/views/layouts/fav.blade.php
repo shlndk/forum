@@ -5,7 +5,7 @@
     <div class="container mt-3 ">
         <div class="card shadow-lg p-4">
             @if($posts->count() == 0)
-                <p class="text-muted">Nothing found</p>
+                <p class="text-muted">Ничего не найдено</p>
             @endif
             @foreach($posts as $post)
 
@@ -18,7 +18,7 @@
                 <form action="{{ route('removeFav', $post) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Remove from favorites</button>
+                    <button type="submit" class="btn btn-danger">Удалить из избранного</button>
                 </form>
                 <hr>
             @endforeach
