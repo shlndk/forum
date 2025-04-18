@@ -13,7 +13,7 @@ class FavoriteController extends Controller
         $user = Auth::user();
         $user->favorites()->attach($postId);
 
-        return redirect()->back()->with('success', 'Post added to favorites!');
+        return redirect()->back()->with('success', 'Пост добавлен в избранное!');
     }
     public function showFav()
     {
@@ -27,6 +27,4 @@ class FavoriteController extends Controller
 
         return back();
     }
-
-
 }
