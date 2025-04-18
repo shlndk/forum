@@ -10,7 +10,6 @@ class PostController extends Controller
 {
     public function searchForm(Request $request)
     {
-
         $search = trim($request->input('search'));
 
         $posts = collect();
@@ -18,8 +17,6 @@ class PostController extends Controller
         if ($search) {
             $posts = Post::where('title', 'like', '%' . $search . '%')->get();
         }
-
-
 
         return view('layouts.search', compact('posts','search'));
 

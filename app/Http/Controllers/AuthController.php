@@ -18,7 +18,13 @@ class AuthController extends Controller
             'password' => 'required|min:6'
         ]);
 
+
         User::create($auth);
+
+
+        $user = User::create($auth);
+        $user->assignRole('user');
+
 
         return redirect(route('home'))->with('success', 'User created successfully');
     }
