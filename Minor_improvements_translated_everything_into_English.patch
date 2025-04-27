@@ -1,0 +1,462 @@
+Subject: [PATCH] Minor improvements
+translated everything into English
+---
+Index: app/Http/Controllers/CommentsController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Http/Controllers/CommentsController.php b/app/Http/Controllers/CommentsController.php
+--- a/app/Http/Controllers/CommentsController.php	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/app/Http/Controllers/CommentsController.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
+@@ -20,7 +20,7 @@
+ 
+         Comment::create($comment);
+ 
+-        return back()->with('success', 'Комментарий успешно добавлен.');
++        return back()->with('success', 'Comment has been successfully added');
+     }
+     public function showComment(Post $post, User $user)
+     {
+@@ -34,10 +34,16 @@
+         $comment = Comment::findOrFail($commentId);
+ 
+         if (auth()->id() !== $comment->user_id) {
+-            return redirect()->back()->with('error', 'У вас нет прав для удаления этого комментария.');
++            return redirect()->back()->with('error', 'You do not have permissions to delete this comment');
+         }
+ 
+         $comment->delete();
+-        return redirect()->back()->with('success', 'Комментарий успешно удалён.');
++        return redirect()->back()->with('success', 'Comment has been successfully deleted');
+     }
++
++    public function getComments(){
++        $comments = auth()->user()->comments()->get();
++        return view('comments.show', compact('comments'));
++    }
++
+ }
+Index: app/Http/Controllers/FavoriteController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Http/Controllers/FavoriteController.php b/app/Http/Controllers/FavoriteController.php
+--- a/app/Http/Controllers/FavoriteController.php	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/app/Http/Controllers/FavoriteController.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
+@@ -13,7 +13,7 @@
+         $user = Auth::user();
+         $user->favorites()->attach($postId);
+ 
+-        return redirect()->back()->with('success', 'Пост добавлен в избранное!');
++        return redirect()->back()->with('success', 'Post added to favorites!');
+     }
+     public function showFav()
+     {
+Index: public/css/app.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/public/css/app.css b/public/css/app.css
+--- a/public/css/app.css	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/public/css/app.css	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
+@@ -11,4 +11,9 @@
+         'Segoe UI Symbol', 'Noto Color Emoji';
+ }
+ 
+-
++.nav-item.dropdown:hover .dropdown-menu {
++    display: block;
++}
++.dropdown-menu {
++    transform: translateX(-50px);
++}
+Index: resources/views/comments/form.blade.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/views/comments/form.blade.php b/resources/views/comments/form.blade.php
+--- a/resources/views/comments/form.blade.php	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/resources/views/comments/form.blade.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
+@@ -12,16 +12,16 @@
+         @csrf
+         <input type="hidden" name="post_id" value="{{ $post->id }}">
+         <div class="mb-3">
+-            <p class="fw-bold form-label">Оставить комментарий</p>
++            <p class="fw-bold form-label">Leave a comment</p>
+             <textarea name="content" class="form-control" rows="3" required></textarea>
+         </div>
+-        <button type="submit" class="btn btn-primary">Отправить</button>
++        <button type="submit" class="btn btn-primary">Send</button>
+         <a href="javascript:history.back();" class="btn btn-outline-secondary">
+-            <i class="bi bi-arrow-left"></i> Назад к посту
++            <i class="bi bi-arrow-left"></i> Back to post
+         </a>
+     </form>
+ @else
+-    <p>Пожалуйста, <a href="{{ route('login') }}">войдите</a>, чтобы оставить комментарий.</p>
++    <p>Please, <a href="{{ route('login') }}">log in</a>, to leave a comment</p>
+ @endauth
+ 
+ 
+Index: resources/views/comments/show.blade.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/views/comments/show.blade.php b/resources/views/comments/show.blade.php
+new file mode 100644
+--- /dev/null	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
++++ b/resources/views/comments/show.blade.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
+@@ -0,0 +1,28 @@
++@extends('layouts.app')
++
++
++@section('content')
++    @include('layouts.other.nav')
++    <div class="container mt-3 ">
++        <div class="card shadow-lg p-4">
++            @if($comments->count() == 0)
++                <p class="text-muted">Nothing found</p>
++            @endif
++            @foreach($comments as $comment)
++
++                <div class="card-body">
++                    <h3 class="text-muted">{{ $comment->content }}</h3>
++                    <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
++                    <hr>
++                </div>
++{{--                <form action="{{ route('removeFav', $post) }}" method="POST" class="d-inline">--}}
++{{--                    @csrf--}}
++{{--                    @method('DELETE')--}}
++{{--                    <button type="submit" class="btn btn-danger">Удалить из избранного</button>--}}
++{{--                </form>--}}
++
++            @endforeach
++
++        </div>
++    </div>
++@endsection
+Index: resources/views/layouts/createPost.blade.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/views/layouts/createPost.blade.php b/resources/views/layouts/createPost.blade.php
+--- a/resources/views/layouts/createPost.blade.php	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/resources/views/layouts/createPost.blade.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
+@@ -12,7 +12,7 @@
+         <div class="alert alert-warning d-flex align-items-center shadow-sm" role="alert">
+             <i class="bi bi-exclamation-triangle-fill me-2"></i>
+             <div>
+-                Чтобы создать пост, вам нужно <a href="{{route('login')}}" class="fw-bold text-decoration-none">авторизоваться</a>.
++                To create a post, you need to <a href="{{route('login')}}" class="fw-bold text-decoration-none">log in</a>.
+             </div>
+         </div>
+     @endguest
+@@ -20,19 +20,19 @@
+     @auth
+         <div class="container mt-5">
+             <div class="card">
+-                <div class="card-header bg-dark text-white">Создать новый пост</div>
++                <div class="card-header bg-dark text-white">Create a new post</div>
+                 <div class="card-body">
+                     <form action="{{ route('createPost') }}" method="POST">
+                         @csrf
+                         <div class="mb-3">
+-                            <label for="title" class="form-label">Заголовок</label>
++                            <label for="title" class="form-label">Title</label>
+                             <input type="text" class="form-control" id="title" name="title" required>
+                         </div>
+                         <div class="mb-3">
+-                            <label for="content" class="form-label">Содержимое</label>
++                            <label for="content" class="form-label">Contents</label>
+                             <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                         </div>
+-                        <button type="submit" class="btn btn-secondary">Создать пост</button>
++                        <button type="submit" class="btn btn-secondary">Create post</button>
+                     </form>
+                 </div>
+             </div>
+Index: resources/views/layouts/fav.blade.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/views/layouts/fav.blade.php b/resources/views/layouts/fav.blade.php
+--- a/resources/views/layouts/fav.blade.php	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/resources/views/layouts/fav.blade.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
+@@ -5,7 +5,7 @@
+     <div class="container mt-3 ">
+         <div class="card shadow-lg p-4">
+             @if($posts->count() == 0)
+-                <p class="text-muted">Ничего не найдено</p>
++                <p class="text-muted">Nothing found</p>
+             @endif
+             @foreach($posts as $post)
+ 
+@@ -18,7 +18,7 @@
+                 <form action="{{ route('removeFav', $post) }}" method="POST" class="d-inline">
+                     @csrf
+                     @method('DELETE')
+-                    <button type="submit" class="btn btn-danger">Удалить из избранного</button>
++                    <button type="submit" class="btn btn-danger">Remove from favorites</button>
+                 </form>
+                 <hr>
+             @endforeach
+Index: resources/views/layouts/other/nav.blade.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/views/layouts/other/nav.blade.php b/resources/views/layouts/other/nav.blade.php
+--- a/resources/views/layouts/other/nav.blade.php	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/resources/views/layouts/other/nav.blade.php	(revision f054162fb0c717edd47f6c6f86c13388f234a322)
+@@ -1,30 +1,47 @@
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+     <div class="container-fluid">
+-        <a class="navbar-brand" href="{{route('home')}}">Forums</a>
+-        <a class="navbar-brand" href="{{route('createPostForm')}}">Create Post</a>
+-        <a class="navbar-brand" href="{{route('searchForm')}}">Search</a>
+-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
++        <a class="navbar-brand" href="/">Forum</a>
++        <a class="navbar-brand text-decoration-none" href="{{route('searchForm')}}">Search</a>
++        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+             <span class="navbar-toggler-icon"></span>
+         </button>
+-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+-            <ul class="navbar-nav">
+-                @auth
+-                    <li class="nav-item">
+-                        <a class="nav-link">{{Auth::user()->name}}</a>
+-                    </li>
+-                    <li class="nav-item">
+-                        <a class="nav-link" href="{{route('logout')}}">Logout</a>
++        @auth
++            <div class="collapse navbar-collapse" id="navbarNav">
++                <ul class="navbar-nav ms-auto">
++                    <li class="nav-item dropdown">
++                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
++                           data-bs-toggle="dropdown">
++                            {{Auth::user()->name}}
++                        </a>
++                        <ul class="dropdown-menu">
++                            <li><a class="dropdown-item" href="{{route('createPostForm')}}">Create Post</a></li>
++                            <li><a class="dropdown-item" href="{{route('showFav')}}">My favorites</a></li>
++                            <li><a class="dropdown-item" href="{{route('getComments')}}">My comments</a></li>
++                            <li>
++                                <hr class="dropdown-divider">
++                            </li>
++                            <li><a class="dropdown-item" href="{{route('logout')}}">Logout</a></li>
++                        </ul>
+                     </li>
+-                @endauth
+-
+-                @guest
+-                    <li class="nav-item">
+-                        <a class="nav-link" href="{{route('login')}}">Log In</a>
++                </ul>
++            </div>
++        @endauth
++        @guest
++            <div class="collapse navbar-collapse" id="navbarNav">
++                <ul class="navbar-nav ms-auto">
++                    <li class="nav-item dropdown">
++                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
++                           data-bs-toggle="dropdown">
++                            🙋‍♂️
++                        </a>
++                        <ul class="dropdown-menu">
++
++                            <li><a class="dropdown-item" href="{{route('login')}}">Log in</a></li>
++                            <li><a class="dropdown-item" href="{{route('register')}}">Register</a></li>
++                        </ul>
+                     </li>
+-                    <li class="nav-item">
+-                        <a class="nav-link" href="{{route('register')}}">Register</a>
+-                    </li>@endguest
+-            </ul>
+-        </div>
++                </ul>
++            </div>
++        @endguest
+     </div>
+ </nav>
+Index: resources/views/layouts/search.blade.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/views/layouts/search.blade.php b/resources/views/layouts/search.blade.php
+--- a/resources/views/layouts/search.blade.php	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/resources/views/layouts/search.blade.php	(revision f054162fb0c717edd47f6c6f86c13388f234a322)
+@@ -3,32 +3,30 @@
+ 
+ 
+ @section('title', 'Search post')
+-<?php
+-
+-?>
+ 
+ @section('content')
+     @include('layouts.other.nav')
+     <div class="container mt-5">
+-        <h2>Поиск постов</h2>
++        <h2>Post search</h2>
+         <form action="{{ route('searchForm') }}" method="GET" class="mb-4">
+             <div class="input-group">
+-                <input type="text" name="search" class="form-control" placeholder="Введите название темы..."
++                <input type="text" name="search" class="form-control" placeholder="Enter a subject title..."
+                        value="{{ request('search') }}" required>
+-                <button class="btn btn-secondary" type="submit">Поиск</button>
+-                <a href="{{ route('showFav')}}" class="btn btn-dark">♡</a>
++                <button class="btn btn-secondary" type="submit">Search</button>
+             </div>
+         </form>
+         <ul class="list-group">
+             @foreach($posts as $post)
++
+                 <li class="list-group-item d-flex justify-content-between align-items-center">
+                     <a href="{{ route('showPost', $post) }}" class="text-decoration-none">{{ $post->title }}</a>
+                     <span class="text-muted">{{ $post->created_at->format('d.m.Y H:i') }}</span>
+                 </li>
+             @endforeach
+-        </ul>
+-        @if($posts->count() == 0)
+-            <p class="text-muted">Ничего не найдено</p>
+-        @endif
++
++            @if($posts->isEmpty())
++                <p class="text-muted">Nothing found</p>
++            @endif
++        </ul>
+     </div>
+ @endsection
+Index: routes/web.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/routes/web.php b/routes/web.php
+--- a/routes/web.php	(revision 475e38695e4ddf8ca5828bd609f65314877c5a0a)
++++ b/routes/web.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
+@@ -25,4 +25,5 @@
+     Route::get('/comments/{post}', [CommentsController::class, 'showComment'])->name('showComment');
+     Route::delete('/delete-comment/{comment}', [CommentsController::class, 'deleteComment'])->name('deleteComment');
+     Route::post('delete-post/{post}', [CommentsController::class, 'destroyComment'])->name('destroyComment');
++    Route::get('/comments', [CommentsController::class, 'getComments'])->name('getComments');
+ });
+Index: app/Http/Controllers/AuthController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Http/Controllers/AuthController.php b/app/Http/Controllers/AuthController.php
+--- a/app/Http/Controllers/AuthController.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
++++ b/app/Http/Controllers/AuthController.php	(revision f054162fb0c717edd47f6c6f86c13388f234a322)
+@@ -18,8 +18,14 @@
+             'password' => 'required|min:6'
+         ]);
+ 
++
+         User::create($auth);
+ 
++
++        $user = User::create($auth);
++        $user->assignRole('user');
++
++
+         return redirect(route('home'))->with('success', 'User created successfully');
+     }
+ 
+Index: app/Http/Controllers/PostController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/Http/Controllers/PostController.php b/app/Http/Controllers/PostController.php
+--- a/app/Http/Controllers/PostController.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
++++ b/app/Http/Controllers/PostController.php	(revision f054162fb0c717edd47f6c6f86c13388f234a322)
+@@ -10,7 +10,6 @@
+ {
+     public function searchForm(Request $request)
+     {
+-
+         $search = trim($request->input('search'));
+ 
+         $posts = collect();
+@@ -19,8 +18,6 @@
+             $posts = Post::where('title', 'like', '%' . $search . '%')->get();
+         }
+ 
+-
+-
+         return view('layouts.search', compact('posts','search'));
+ 
+     }
+Index: resources/views/post/show.blade.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/resources/views/post/show.blade.php b/resources/views/post/show.blade.php
+--- a/resources/views/post/show.blade.php	(revision 16a8f3c1e7a6f5e25540f07672aa0c49f3cc9eda)
++++ b/resources/views/post/show.blade.php	(revision f054162fb0c717edd47f6c6f86c13388f234a322)
+@@ -12,6 +12,7 @@
+             {{ session('error') }}
+         </div>
+     @endif
++
+     <div class="container mt-5">
+         <div class="card shadow-lg p-4">
+             <div class="card-body">
+@@ -23,31 +24,29 @@
+                     <form action="{{ route('addFav', $post) }}" method="POST">
+                         @csrf
+                         <button type="submit" class="btn btn-outline-secondary me-2">
+-                            <i class="bi bi-heart"></i> Добавить в избранное
++                            <i class="bi bi-heart"></i> Add to favorites
+                         </button>
+                     </form>
+                     @auth
+                         <a href="{{ route('showComment', $post) }}">
+                             <button type="submit" class="btn btn-outline-secondary me-2">
+-                                <i class="bi bi-chat"></i> Прокомментировать
++                                <i class="bi bi-chat"></i> Comment
+                             </button>
+                         </a>
+                     @endauth
+-
+-
+                     <a href="javascript:history.back();" class="btn btn-outline-secondary">
+-                        <i class="bi bi-arrow-left"></i> Назад к поиску
++                        <i class="bi bi-arrow-left"></i> Back to search
+                     </a>
+                 </div>
+                 @guest
+                     <div>
+-                        Чтобы прокоментировать пост, вам нужно <a href="{{route('login')}}"
+-                                                                  class="fw-bold text-decoration-none ">авторизоваться</a>.
++                        To comment on a post, you need to <a href="{{route('login')}}"
++                                                             class="fw-bold text-decoration-none ">login</a>.
+                     </div>
+                 @endguest
+             </div>
+ 
+-            <h5>Комментарии ({{ $post->comments->count() }})</h5>
++            <h5>Comments ({{ $post->comments->count() }})</h5>
+ 
+             @foreach($post->comments as $comment)
+                 <div class="card mb-2">
+@@ -57,7 +56,7 @@
+                         <form action="{{ route('destroyComment', $comment->id) }}" method="POST">
+                             @csrf
+                             <button type="submit" class="btn btn-danger btn-sm">
+-                                Удалить
++                                Delete
+                             </button>
+                             <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                         </form>

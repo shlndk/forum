@@ -33,7 +33,7 @@ class CommentsController extends Controller
     {
         $comment = Comment::findOrFail($commentId);
 
-        if (auth()->id() !== $comment->user_id) {
+        if (auth()->id() !== $comment->user_id && !auth()->user()->hasRole('admin')) {
             return redirect()->back()->with('error', 'You do not have permissions to delete this comment');
         }
 

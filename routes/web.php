@@ -5,7 +5,9 @@ use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/',[HomeController::class, 'index'])->name('home');
 Route::get('/register', [AuthController::class, 'registerForm'])->name('registerForm');
@@ -26,4 +28,6 @@ Route::middleware('auth')->group(function(){
     Route::delete('/delete-comment/{comment}', [CommentsController::class, 'deleteComment'])->name('deleteComment');
     Route::post('delete-post/{post}', [CommentsController::class, 'destroyComment'])->name('destroyComment');
     Route::get('/comments', [CommentsController::class, 'getComments'])->name('getComments');
+    Route::get('/test', [TestController::class, 'test'])->name('test');
+    Route::post('check', [TestController::class, 'checkAnswer'])->name('checkAnswer');
 });
