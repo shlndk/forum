@@ -6,6 +6,15 @@
 
 <form action="{{ route('register') }}" method="POST">
     @csrf
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="container mt-5">
         <div class="row d-flex justify-content-center">
             <div class="col-md-6">
@@ -13,11 +22,11 @@
                     <div class="form-data">
                         <div class="forms-inputs">
                             <span>Name</span>
-                            <input autocomplete="off" type="text" name="name" class="form-control" required>
+                            <input autocomplete="on" type="text" name="name" value="{{old('name')}}" class="form-control" required>
                             <div class="invalid-feedback">Name is required!</div>
                         <div class="forms-inputs">
                             <span>Email</span>
-                            <input autocomplete="off" type="email" name="email" class="form-control" required>
+                            <input autocomplete="on" type="email" name="email" value="{{old('email')}}" class="form-control" required>
                             <div class="invalid-feedback">A valid email is required!</div>
                         </div>
                         <div class="forms-inputs">

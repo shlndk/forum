@@ -19,6 +19,15 @@
 
     @auth
         <div class="container mt-5">
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="card">
                 <div class="card-header bg-dark text-white">Создать новый пост</div>
                 <div class="card-body">
