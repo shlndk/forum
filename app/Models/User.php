@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -44,6 +45,10 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
     protected function casts(): array
     {
         return [
@@ -51,4 +56,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 }

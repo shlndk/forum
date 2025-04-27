@@ -35,7 +35,6 @@
                             🙋‍♂️
                         </a>
                         <ul class="dropdown-menu">
-
                             <li><a class="dropdown-item" href="{{route('login')}}">Log in</a></li>
                             <li><a class="dropdown-item" href="{{route('register')}}">Register</a></li>
                         </ul>

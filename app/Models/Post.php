@@ -12,7 +12,10 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
     public function favorites(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'favorites', 'post_id', 'user_id');
