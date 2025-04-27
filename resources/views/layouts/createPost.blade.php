@@ -12,7 +12,7 @@
         <div class="alert alert-warning d-flex align-items-center shadow-sm" role="alert">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
             <div>
-                Чтобы создать пост, вам нужно <a href="{{route('login')}}" class="fw-bold text-decoration-none">авторизоваться</a>.
+                To create a post, you need to <a href="{{route('login')}}" class="fw-bold text-decoration-none">log in</a>.
             </div>
         </div>
     @endguest
@@ -29,19 +29,19 @@
                 </div>
             @endif
             <div class="card">
-                <div class="card-header bg-dark text-white">Создать новый пост</div>
+                <div class="card-header bg-dark text-white">Create a new post</div>
                 <div class="card-body">
                     <form action="{{ route('createPost') }}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label for="title" class="form-label">Заголовок</label>
+                            <label for="title" class="form-label">Title</label>
                             <input type="text" class="form-control" id="title" name="title" required>
                         </div>
                         <div class="mb-3">
-                            <label for="content" class="form-label">Содержимое</label>
+                            <label for="content" class="form-label">Content</label>
                             <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-secondary">Создать пост</button>
+                        <button type="submit" class="btn btn-secondary">Create post</button>
                     </form>
                 </div>
             </div>
