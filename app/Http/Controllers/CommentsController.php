@@ -46,4 +46,6 @@ class CommentsController extends Controller
         return view('comments.show', compact('comments'));
     }
 
+
+
 }
