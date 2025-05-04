@@ -14,6 +14,9 @@
                     <h3 class="text-muted">{{ $comment->content }}</h3>
                     <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                     <hr>
+                    <form action="{{route('showPost', $comment->post_id)}}" method="get">
+                        <button type="submit" class="btn btn-secondary">watch Post</button>
+                    </form>
                 </div>
             @endforeach
 
