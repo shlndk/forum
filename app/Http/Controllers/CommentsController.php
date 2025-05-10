@@ -17,14 +17,12 @@ class CommentsController extends Controller
         ]);
 
         $comment['user_id'] = auth()->id();
-
         Comment::create($comment);
 
         return back()->with('success', 'Comment has been successfully added');
     }
     public function showComment(Post $post, User $user)
     {
-
         return view('comments.form', compact( 'post', 'user'));
     }
 
@@ -38,11 +36,14 @@ class CommentsController extends Controller
         }
 
         $comment->delete();
+
         return redirect()->back()->with('success', 'Comment has been successfully deleted');
     }
 
     public function getComments(){
+
         $comments = auth()->user()->comments()->get();
+
         return view('comments.show', compact('comments'));
     }
 
