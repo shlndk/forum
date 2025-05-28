@@ -12,6 +12,8 @@
 Використані технології: PHP/Laravel, MySQL, Boostrap, Laravel-permission
 
 [Головна сторінка](https://github.com/shlndk/forum/blob/8bbaab95c0ef7dc75e30c735d7226e1ac6b8c4f1/screenshots/home-page.png)
+[Логін](https://github.com/shlndk/forum/blob/78559126bdd7c060a087a5ad42bdebb7c3600308/screenshots/login-form.png)
+[Реєстрація](https://github.com/shlndk/forum/blob/78559126bdd7c060a087a5ad42bdebb7c3600308/screenshots/register-form.png)
 [Створення посту](https://github.com/shlndk/forum/blob/8bbaab95c0ef7dc75e30c735d7226e1ac6b8c4f1/screenshots/create-post-form.png)
 [Пошук посту](https://github.com/shlndk/forum/blob/8bbaab95c0ef7dc75e30c735d7226e1ac6b8c4f1/screenshots/search-post.png)
 [Перегляд посту](https://github.com/shlndk/forum/blob/1a8ca112256ee1495a906e5460b5ac8ea8544989/screenshots/watch-post.png)
