@@ -2,9 +2,14 @@
 
 
 @include('layouts.other.nav')
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
+
+@if($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
 @endif
 @auth
@@ -23,3 +28,4 @@
 @else
     <p>Please, <a href="{{ route('login') }}">log in</a>, to leave a comment</p>
 @endauth
+

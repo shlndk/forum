@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -13,16 +15,11 @@ class AuthController extends Controller
 
         return view('auth.register');
     }
-    public function register(Request $request){
+    public function register(RegisterRequest $request){
 
-        $data = $request->validate([
-            'name' => 'required|min:6',
-            'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|min:6',
-            'password_confirmation' => 'required|same:password'
-        ]);
 
-        $user = User::create($data);
+        $user = User::create($request->validated());
+
         $user->assignRole('user');
 
         return redirect(route('home'))->with('success', 'You have successfully registered to continue please login');
@@ -33,14 +30,10 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request){
+    public function login(LoginRequest $request){
 
-        $auth = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|min:6'
-        ]);
 
-        if(Auth::attempt($auth)){
+        if(Auth::attempt($request->validated())){
             return redirect('/');
         }
 

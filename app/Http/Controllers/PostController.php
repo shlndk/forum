@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controller;
 
 class PostController extends Controller
 {
@@ -37,16 +39,18 @@ class PostController extends Controller
 
     }
 
-    public function createPost(Request $request)
+    public function createPost(PostRequest $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|min:6',
-            'content' => 'required|min:15'
-        ]);
+
 
         $validatedData['username'] = Auth::user()->name;
 
-        Post::create($validatedData);
+        Post::create(
+            array_merge(
+                $request->validated(),
+                $validatedData
+            )
+        );
 
         return redirect()->route('home')->with('success', 'Post created successfully');
     }
