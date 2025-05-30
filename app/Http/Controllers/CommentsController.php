@@ -2,29 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class CommentsController extends Controller
 {
-    public function addComment(Request $request)
+    public function addComment(CommentRequest $request)
     {
-        $comment = $request->validate([
-            'content' => 'required|min:6',
-            'post_id' => 'required|integer'
-        ]);
 
-        $comment['user_id'] = auth()->id();
+        Comment::create(array_merge(
+            $request->validated(),
+            ['user_id' => auth()->id()]
+        ));
 
-        Comment::create($comment);
+        return redirect()->route('showPost', $request->post_id)->with('success', 'Comment has been successfully added');
 
-        return back()->with('success', 'Comment has been successfully added');
     }
     public function showComment(Post $post, User $user)
     {
-
         return view('comments.form', compact( 'post', 'user'));
     }
 
@@ -38,11 +37,14 @@ class CommentsController extends Controller
         }
 
         $comment->delete();
+
         return redirect()->back()->with('success', 'Comment has been successfully deleted');
     }
 
     public function getComments(){
+
         $comments = auth()->user()->comments()->get();
+
         return view('comments.show', compact('comments'));
     }
 

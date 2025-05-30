@@ -2,12 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controller;
 
 class PostController extends Controller
 {
+
+    public function showPost(Post $post)
+    {
+        if (!$post) {
+            abort(404);
+        }
+
+        return view('post.show', compact('post'));
+    }
+    public function createPostForm()
+    {
+        return view('layouts.createPost');
+    }
+
     public function searchForm(Request $request)
     {
         $search = trim($request->input('search'));
@@ -22,14 +39,22 @@ class PostController extends Controller
 
     }
 
-    public function showPost(Post $post)
+    public function createPost(PostRequest $request)
     {
-        if (!$post) {
-            abort(404);
-        }
 
-        return view('post.show', compact('post'));
+
+        $validatedData['username'] = Auth::user()->name;
+
+        Post::create(
+            array_merge(
+                $request->validated(),
+                $validatedData
+            )
+        );
+
+        return redirect()->route('home')->with('success', 'Post created successfully');
     }
+
 
 
 }
