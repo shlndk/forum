@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class Role extends Model
 {
 
-    use HasFactory;
-    protected $fillable = ['question', 'answer'];
-
+    use hasFactory;
+    protected $fillable = ['name', 'guard_name'];
 
 }

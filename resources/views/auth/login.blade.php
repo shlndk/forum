@@ -33,6 +33,11 @@
                         <div class="mb-3">
                             <button type="submit" class="btn btn-dark w-100">Login</button>
                         </div>
+
+                        <a href="{{ route('googleLogin') }}" class="btn btn-outline-light border d-flex align-items-center gap-2 shadow-sm" style="background-color: white;">
+                            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" width="20" height="20">
+                            <span class="text-dark">Continue with Google</span>
+                        </a>
                     </div>
                 </div>
             </div>

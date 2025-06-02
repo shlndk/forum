@@ -5,8 +5,12 @@ use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\TestController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -16,6 +20,9 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('loginForm');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+Route::get('auth/google', [SocialiteController::class, 'googleLogin'])->name('googleLogin');
+Route::get('auth/google/callback', [SocialiteController::class, 'googleAuthentication'])->name('googleAuthentication');
 
 Route::get('/search', [PostController::class, 'searchForm'])->name('searchForm');
 
